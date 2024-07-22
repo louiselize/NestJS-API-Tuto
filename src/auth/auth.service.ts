@@ -9,7 +9,34 @@ import { error } from "console";
 export class AuthService {
     constructor(private prisma: PrismaService){}
 
-    signin(){return 'signin function'}
+    async signin(dto: AuthDto){
+        const user = await this.prisma.user.findUnique({
+            where: {
+                email:dto.email,
+            },
+        });
+
+        if(!user){
+            throw new ForbiddenException(
+                'Credentials incorrect',
+            );
+        }
+
+        const pwdMatches = await argon.verify(
+            user.hash,
+            dto.password
+        )
+
+        if (!pwdMatches){
+            throw new ForbiddenException(
+                'Credentials incorrect',
+            );
+        }
+
+        delete user.hash //TODO: better way to deal with "hash" will be explain later
+
+        return user
+    }
 
     async signup(dto: AuthDto){
         const hash = await argon.hash(dto.password);
