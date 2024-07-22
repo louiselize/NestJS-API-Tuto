@@ -7,13 +7,13 @@ export class AuthController{
     constructor(private authService: AuthService) {}
 
     @Post('signin')
-    signin(@Body() dto: AuthDto){
+    signin(@Body() dto: any){
         return this.authService.signin()
     }
 
     @Post('signup')
-    signup(@Body() dto: any){
-        return this.authService.signup()
+    signup(@Body() dto: AuthDto){
+        return this.authService.signup(dto)
     }
 
 
