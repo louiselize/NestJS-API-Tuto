@@ -171,7 +171,7 @@ describe('App e2e', () => {
 
   describe('Bookmarks', () => {
     describe('Get Empty Bookmarks',() => {
-      it('should get bookmarks', () => {
+      it('should get empty bookmarks', () => {
         return pactum
           .spec()
           .get('/bookmarks')
@@ -229,9 +229,7 @@ describe('App e2e', () => {
         title: "edit bookmark",
         description: "edit bookmark test"
       }
-
       it('should edit bookmark', () => {
-  
         return pactum
           .spec()
           .patch('/bookmarks/{id}')
@@ -243,12 +241,32 @@ describe('App e2e', () => {
           .expectStatus(200)
           .expectBodyContains(dto.title)
           .expectBodyContains(dto.description)
-          .inspect()
       })
     });
-    describe('Delete Bookmark',() => {});
+    describe('Delete Bookmark',() => {
+      it('should edit bookmark', () => {
+        return pactum
+          .spec()
+          .delete('/bookmarks/{id}')
+          .withPathParams('id', '$S{bookmarkId}')
+          .withHeaders({
+            Authorization: 'Bearer $S{userAt}'
+          })
+          .expectStatus(204)
+      });
+      it('should get empty bookmarks', () => {
+        return pactum
+          .spec()
+          .get('/bookmarks')
+          .withHeaders({
+            Authorization: 'Bearer $S{userAt}'
+          })
+          .expectStatus(200)
+          .expectBody([])
+          .expectJsonLength(0)
+      });
+    });
   });
 
-  it.todo('should pass')
 
 })
