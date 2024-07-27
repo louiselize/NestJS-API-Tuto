@@ -14,7 +14,14 @@ export class BookmarkService {
         })
     }
 
-    getBookmarkById(userId: number, bookmardId: number){}
+    getBookmarkById(userId: number, bookmardId: number){
+        return this.prisma.bookmark.findFirst({
+            where:{
+                id: bookmardId,
+                userId
+            }
+        })
+    }
 
     async createBookmark(userId: number, dto: CreateBookmarkDto){
         const bookmark = await this.prisma.bookmark.create({
